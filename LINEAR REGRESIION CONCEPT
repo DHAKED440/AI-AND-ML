@@ -1,0 +1,36 @@
+import pandas as pd
+import numpy as np
+import matplotlib . pyplot as plt
+from sklearn.linear_model import LinearRegression
+
+#create dummy data
+#year of experience
+x=np.array([1,2,3,4,5,6,7,8,9,10]).reshape(-1,1)
+
+#salary corresponding to experience
+y=np.array([30000,35000,40000,45000,50000,55000,60000,65000,70000,75000])
+
+#create and train the model
+model=LinearRegression() #y=mx+c
+model.fit(x,y) #training ( 80 percent),testing(20 percent) fit la mtlab hai sikhana apne model ko 
+
+#make predictions
+y_pred=model.predict(x) 
+#print model parameters how your model is working 
+print("slope(cofficient) : m" , model.coef_[0])
+print("Intercept : c" , model.intercept_)
+
+#plot the result
+plt.scatter(x,y,label="Actual salary") #scatter means : graph with dot (ek line bnega usper dot me x and y ko show kerega)
+plt.plot(x,y_pred,color="red", label="LinearRegression")
+ # x → Years of experience (input values) , y_pred → Predicted salary (output from the model)
+ #color : It makes the line red
+
+
+plt.xlabel("Year of experience")
+plt.ylabel("Salary")
+plt.title("Linear Regression : Salary vs experience")
+plt.legend() #it show my values what is at corner
+plt.show()
+
+
