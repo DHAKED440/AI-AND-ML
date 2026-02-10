@@ -535,3 +535,79 @@ for i,feature in enumerate(numerical_feature , 1):
      plt.tight_layout()
      plt.show()
 
+
+
+
+
+
+
+
+#SEASON 9 LEARN ABOUT DECISION TREE < RANDOM FOREST < XGBOOST 
+
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier , plot_tree
+from sklearn.ensemble import RandomForestClassifier
+from xgboost import XGBClassifier
+from sklearn.metrics import classification_report , accuracy_score , confusion_matrix
+
+df=pd.read_csv("mobile price classification dataset.csv")
+print(df.head())
+
+print(df.isnull().sum())
+
+for column in df.columns:
+    unique_values_count=df[column].nunique()
+    print(f"column '{column}' : {unique_values_count} unique values")
+    if(unique_values_count <= 10):
+        print("unique value :" , df[column].unique())
+    else:
+        print("\n")
+
+print(df.dtypes)
+print(df.columns)
+
+y = df['four_g']      # predict 5G support
+x = df.drop('four_g', axis=1)
+
+x_train , x_test , y_train , y_test=train_test_split(x,y,test_size=0.2,random_state=42)
+dt_model=DecisionTreeClassifier(criterion="gini" ,  class_weight="balanced",max_depth=3 ,  min_samples_leaf=20 , random_state=42)
+dt_model.fit(x_train , y_train)
+
+print("My dt_model is succesfully tarined")
+
+y_pred=dt_model.predict(x_test)
+
+
+print("Accuracy of model : " , accuracy_score(y_test , y_pred))
+print("classification of data : " , classification_report(y_test , y_pred))
+print("confusion matrix of model : " , confusion_matrix(y_test , y_pred))
+
+plt.figure(figsize=(25,14) , dpi=200)
+
+plot_tree(dt_model , feature_names=x.columns , rounded=True , filled=True , fontsize=6 )
+plt.show()
+
+rf_model=RandomForestClassifier( n_estimators=300, class_weight="balanced", max_features="sqrt" , min_samples_leaf=3 , max_depth=12 , n_jobs=-1
+, random_state=42)
+rf_model.fit(x_train , y_train)
+
+y_pred=rf_model.predict(x_test)
+
+print("Accuracy of model : " , accuracy_score(y_test , y_pred))
+print("classification of data : " , classification_report(y_test , y_pred))
+print("confusion matrix of model : " , confusion_matrix(y_test , y_pred))
+
+xgb_model=XGBClassifier( random_state=42)
+xgb_model.fit(x_train , y_train)
+
+print("XGB model trained succesfully")
+y_pred=xgb_model.predict(x_test)
+
+print("Accuracy of model : " , accuracy_score(y_test , y_pred))
+print("classification of data : " , classification_report(y_test , y_pred))
+print("confusion matrix of model : " , confusion_matrix(y_test , y_pred))
